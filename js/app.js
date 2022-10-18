@@ -53,9 +53,9 @@ function click(event) {
   }
   count++;
   let clickGoat = event.target.alt;
-  for (let i = 0; i < oddDuct.allGoatsArray.length; i++) {
-    if (clickGoat === oddDuct.allGoatsArray[i].name) {
-      oddDuct.allGoatsArray[i].clicks++;
+  for (let i = 0; i < oddDuct.allProducts.length; i++) {
+    if (clickGoat === oddDuct.allProducts[i].name) {
+      oddDuct.allProducts[i].clicks++;
       break;
     }
   }
@@ -91,7 +91,7 @@ new oddDuct('pen', 'img/pen.jpg');
 new oddDuct('pet-sweep', 'img/pet-sweep.jpg');
 new oddDuct('scissors', 'img/scissors.jpg');
 new oddDuct('shark', 'img/shark.jpg');
-new oddDuct('sweep', 'img/sweep.jpg');
+new oddDuct('sweep', 'img/sweep.png');
 new oddDuct('tauntaun', 'img/tauntaun.jpg');
 new oddDuct('unicorn', 'img/unicorn.jpg');
 new oddDuct('water-can', 'img/water-can.jpg');

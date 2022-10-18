@@ -7,11 +7,11 @@ body {
 }
 
 main {
-  margin: 3rem;
+  margin: 3rem auto;
   width: 1000px;
   display: grid;
-  grid-template-columns: 200px 1fr 250px 3fr;
-  grid-template-rows: 500px 250px 250px 250px;
+  grid-template-columns: 100px 1fr 200px 3fr;
+  grid-template-rows: 400px 200px 200px 200px;
 }
 
 #logo_img {
@@ -48,8 +48,8 @@ section {
 
 section img {
   border: 3px solid transparent;
-  width:250px;
-  height: 250px;
+  width:200px;
+  height: 200px;
 }
 
 section img:hover {
