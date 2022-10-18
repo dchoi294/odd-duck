@@ -1,7 +1,7 @@
 'use strict';
 
 let imgContainer = document.querySelector('section');
-let result = document.querySelector('section + div');
+let button = document.querySelector('section + div');
 let image1 = document.querySelector('section img:first-child');
 let image2 = document.querySelector('section img:nth-child(2)');
 let image3 = document.querySelector('section img:nth-child(3)');
@@ -28,11 +28,9 @@ function renderImg() {
   let img2 = getRandomImage();
   let img3 = getRandomImage();
 
-  while(img1 === img2) {
+  while(img1 === img2 || img1 === img3 || img2 === img3) {
     img2 = getRandomImage();
-    while(img2 === img3) {
-      img3 = getRandomImage();
-    }
+    img3 = getRandomImage();
   }
 
   image1.src = oddDuct.allProducts[img1].src;
@@ -52,17 +50,17 @@ function click(event) {
     alert('Please click on an image');
   }
   count++;
-  let clickGoat = event.target.alt;
+  let clickImg = event.target.alt;
   for (let i = 0; i < oddDuct.allProducts.length; i++) {
-    if (clickGoat === oddDuct.allProducts[i].name) {
-      oddDuct.allProducts[i].clicks++;
+    if (clickImg === oddDuct.allProducts[i].name) {
+      oddDuct.allProducts[i].count++;
       break;
     }
   }
   if (count === maxCount) {
     imgContainer.removeEventListener('click', click);
-    result.addEventListener('click', renderResult);
-    result.className = 'clicks-allowed';
+    button.addEventListener('click', renderResult);
+    button.className = 'clicks-allowed';
     imgContainer.className = 'no-voting';
   } else {
     renderImg();
@@ -71,9 +69,9 @@ function click(event) {
 
 function renderResult() {
   let ul = document.querySelector('ul');
-  for (let i = 0; i < oddDuct.allProducts.length; i++)  {
-    let li = document.querySelector('li');
-    li.textContent = `${oddDuct.allProducts[i].name} had ${oddDuct.allProducts[i].votes} vote and was clicked ${oddDuct.allProducts[i].count} times.`;
+  for (let i = 0; i < oddDuct.allProducts.length; i++) {
+    let li = document.createElement('li');
+    li.textContent = `${oddDuct.allProducts[i].name}: ${oddDuct.allProducts[i].votes} votes and ${oddDuct.allProducts[i].count} views.`;
     ul.appendChild(li);
   }
 }
