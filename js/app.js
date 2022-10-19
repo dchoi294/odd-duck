@@ -23,15 +23,29 @@ function getRandomImage() {
   return Math.floor(Math.random() * oddDuct.allProducts.length);
 }
 
-function renderImg() {
-  let img1 = getRandomImage();
-  let img2 = getRandomImage();
-  let img3 = getRandomImage();
+let arrayNumb = [];
 
-  while(img1 === img2 || img1 === img3 || img2 === img3) {
-    img2 = getRandomImage();
-    img3 = getRandomImage();
+function renderImg() {
+
+  while(arrayNumb.length < 18) {
+    let randNumb = getRandomImage();
+    if(!arrayNumb.includes(randNumb)) {
+      arrayNumb.push(randNumb);
+    }
   }
+
+  let img1 = arrayNumb.shift();
+  let img2 = arrayNumb.shift();
+  let img3 = arrayNumb.shift();
+
+  // let img1 = getRandomImage();
+  // let img2 = getRandomImage();
+  // let img3 = getRandomImage();
+
+  // while(img1 === img2 || img1 === img3 || img2 === img3) {
+  //   img2 = getRandomImage();
+  //   img3 = getRandomImage();
+  // }
 
   image1.src = oddDuct.allProducts[img1].src;
   image1.alt = oddDuct.allProducts[img1].name;
@@ -60,12 +74,61 @@ function click(event) {
   if (count === maxCount) {
     imgContainer.removeEventListener('click', click);
     button.addEventListener('click', renderResult);
-    button.className = 'clicks-allowed';
-    imgContainer.className = 'no-voting';
+    // button.className = 'clicks-allowed';
+    // imgContainer.className = 'no-voting';
+    chart();
   } else {
     renderImg();
   }
 }
+
+function chart() {
+  let imgNames = [];
+  let imgViews = [];
+  let imgVotes = [];
+  for(let i = 0; i < allProducts.length; i++) {
+    imgNames.push(allProducts[i].name);
+    imgViews.push(allProducts[i].name);
+    imgVotes.push(allProducts[i].name);
+  }
+
+  const data = {
+    labels: imgNames,
+    datasets: [{
+      label: 'Views',
+      backgroundColor: 'lightblue',
+      borderColor: 'blue',
+      data: imgViews,
+      borderWidth: 0.5
+    },
+    {
+      label: 'Votes',
+      backgroundColor: 'lightyellow',
+      borderColor: 'yellow',
+      data: imgVotes,
+      borderWidth: 0.5
+    }]
+  };
+
+  const config = {
+    type: 'line',
+    data: data,
+    options:{
+      scales: {
+        y: {
+          beginAtZero: true,
+          maintainAspectRatio: false
+        }
+      }
+    }
+  };
+
+  const newChart = new Chart(document.getElementById('newChart'), config);
+  renderResult();
+}
+
+
+
 
 function renderResult() {
   let ul = document.querySelector('ul');
@@ -76,24 +139,26 @@ function renderResult() {
   }
 }
 
-new oddDuct('bag', 'img/bag.jpg');
-new oddDuct('banana', 'img/banana.jpg');
-new oddDuct('bathroom', 'img/bathroom.jpg');
-new oddDuct('boots', 'img/boots.jpg');
-new oddDuct('breakfast', 'img/breakfast.jpg');
-new oddDuct('bubblegum', 'img/bubblegum.jpg');
-new oddDuct('chair', 'img/chair.jpg');
-new oddDuct('dog-duck', 'img/dog-duck.jpg');
-new oddDuct('dragon', 'img/dragon.jpg');
-new oddDuct('pen', 'img/pen.jpg');
-new oddDuct('pet-sweep', 'img/pet-sweep.jpg');
-new oddDuct('scissors', 'img/scissors.jpg');
-new oddDuct('shark', 'img/shark.jpg');
-new oddDuct('sweep', 'img/sweep.png');
-new oddDuct('tauntaun', 'img/tauntaun.jpg');
-new oddDuct('unicorn', 'img/unicorn.jpg');
-new oddDuct('water-can', 'img/water-can.jpg');
-new oddDuct('wine-glass', 'img/wine-glass.jpg');
+let bag = new oddDuct('bag', 'img/bag.jpg');
+let banana =new oddDuct('banana', 'img/banana.jpg');
+let bathroom = new oddDuct('bathroom', 'img/bathroom.jpg');
+let boots = new oddDuct('boots', 'img/boots.jpg');
+let breakfast = new oddDuct('breakfast', 'img/breakfast.jpg');
+let bubblegum = new oddDuct('bubblegum', 'img/bubblegum.jpg');
+let chair = new oddDuct('chair', 'img/chair.jpg');
+let dogDuck = new oddDuct('dog-duck', 'img/dog-duck.jpg');
+let dragon = new oddDuct('dragon', 'img/dragon.jpg');
+let pen = new oddDuct('pen', 'img/pen.jpg');
+let petSweep = new oddDuct('pet-sweep', 'img/pet-sweep.jpg');
+let scissors = new oddDuct('scissors', 'img/scissors.jpg');
+let shark = new oddDuct('shark', 'img/shark.jpg');
+let sweep = new oddDuct('sweep', 'img/sweep.png');
+let tauntaun = new oddDuct('tauntaun', 'img/tauntaun.jpg');
+let unicorn = new oddDuct('unicorn', 'img/unicorn.jpg');
+let waterCan = new oddDuct('water-can', 'img/water-can.jpg');
+let wineGlass = new oddDuct('wine-glass', 'img/wine-glass.jpg');
+
+let allProducts = [bag, banana, bathroom, boots, breakfast, bubblegum, chair, dogDuck, dragon, pen, petSweep, scissors, shark, sweep, tauntaun, unicorn, waterCan, wineGlass];
 
 renderImg();
 
