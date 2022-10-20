@@ -6,6 +6,9 @@ let image1 = document.querySelector('section img:first-child');
 let image2 = document.querySelector('section img:nth-child(2)');
 let image3 = document.querySelector('section img:nth-child(3)');
 
+const ul = document.querySelector('ul');
+const form = document.querySelector('form');
+
 let count = 0;
 let maxCount = 25;
 
@@ -14,10 +17,16 @@ oddDuct.allProducts = [];
 function oddDuct(name, src) {
   this.name = name;
   this.src = src;
-  this.votes = 0;
+  this.views = 0;
   this.count = 0;
   oddDuct.allProducts.push(this);
 }
+
+oddDuct.prototype.renderResult = function() {
+  let li = document.createElement('li');
+  li.textContent = '';
+  ul.appendChild(li);
+};
 
 function getRandomImage() {
   return Math.floor(Math.random() * oddDuct.allProducts.length);
@@ -59,7 +68,33 @@ function renderImg() {
   oddDuct.allProducts[img3].votes++;
 }
 
+function newResult(imgName, imgCount, imgViews) {
+  let addToResult = new newResult(imgName, imgCount, imgViews);
+  oddDuct.allProducts.push(addToResult);
+  addToResult.renderResult();
+}
+
+function storeResult() {
+  let storeNewResult = JSON.stringify(oddDuct.allProducts);
+  localStorage.setItem('viewResult', storeNewResult);
+}
+
+function resultView() {
+  let previousResult = localStorage.getItem('viewResult');
+  if(previousResult) {
+    let parsedResult = JSON.parse(previousResult);
+    for(let previous of parsedResult) {
+      let imgName = previous.imgName;
+      let imgCount = previous.imgCount;
+      let imgViews = previous.imgViews;
+      newResult(imgName, imgCount, imgViews);
+    }
+  }
+}
+
 function click(event) {
+  event.preventDefault();
+
   if (event.target === imgContainer) {
     alert('Please click on an image');
   }
@@ -71,15 +106,23 @@ function click(event) {
       break;
     }
   }
+  chart();
+  button.addEventListener('click', result);
+
   if (count === maxCount) {
     imgContainer.removeEventListener('click', click);
-    button.addEventListener('click', renderResult);
     // button.className = 'clicks-allowed';
     // imgContainer.className = 'no-voting';
-    chart();
   } else {
     renderImg();
   }
+
+  let imgName = event.target.imgName.value;
+  let imgCount = event.target.imgCount.value;
+  let imgViews = event.target.imgVotes.value;
+  newResult(imgName, imgCount, imgViews);
+  storeResult();
+  resultView();
 }
 
 function chart() {
@@ -88,30 +131,30 @@ function chart() {
   let imgVotes = [];
   for(let i = 0; i < allProducts.length; i++) {
     imgNames.push(allProducts[i].name);
-    imgViews.push(allProducts[i].name);
-    imgVotes.push(allProducts[i].name);
+    imgViews.push(allProducts[i].views);
+    imgVotes.push(allProducts[i].count);
   }
 
   const data = {
-    labels: imgNames,
+    labels: imgNames, imgViews, imgVotes,
     datasets: [{
       label: 'Views',
       backgroundColor: 'lightblue',
       borderColor: 'blue',
       data: imgViews,
-      borderWidth: 0.5
+      borderWidth: 1
     },
     {
       label: 'Votes',
       backgroundColor: 'lightyellow',
       borderColor: 'yellow',
       data: imgVotes,
-      borderWidth: 0.5
+      borderWidth: 1
     }]
   };
 
   const config = {
-    type: 'line',
+    type: 'bar',
     data: data,
     options:{
       scales: {
@@ -124,17 +167,16 @@ function chart() {
   };
 
   const newChart = new Chart(document.getElementById('newChart'), config);
-  renderResult();
+  result();
 }
 
 
 
-
-function renderResult() {
+function result() {
   let ul = document.querySelector('ul');
   for (let i = 0; i < oddDuct.allProducts.length; i++) {
     let li = document.createElement('li');
-    li.textContent = `${oddDuct.allProducts[i].name}: ${oddDuct.allProducts[i].votes} votes and ${oddDuct.allProducts[i].count} views.`;
+    li.textContent = `${oddDuct.allProducts[i].name}: ${oddDuct.allProducts[i].votes} views and ${oddDuct.allProducts[i].count} votes.`;
     ul.appendChild(li);
   }
 }
