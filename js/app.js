@@ -88,8 +88,8 @@ function chart() {
   let imgVotes = [];
   for(let i = 0; i < allProducts.length; i++) {
     imgNames.push(allProducts[i].name);
-    imgViews.push(allProducts[i].name);
-    imgVotes.push(allProducts[i].name);
+    imgViews.push(allProducts[i].views);
+    imgVotes.push(allProducts[i].count);
   }
 
   const data = {
@@ -111,7 +111,7 @@ function chart() {
   };
 
   const config = {
-    type: 'line',
+    type: 'bar',
     data: data,
     options:{
       scales: {
@@ -134,7 +134,7 @@ function renderResult() {
   let ul = document.querySelector('ul');
   for (let i = 0; i < oddDuct.allProducts.length; i++) {
     let li = document.createElement('li');
-    li.textContent = `${oddDuct.allProducts[i].name}: ${oddDuct.allProducts[i].votes} votes and ${oddDuct.allProducts[i].count} views.`;
+    li.textContent = `${oddDuct.allProducts[i].name}: ${oddDuct.allProducts[i].votes} views and ${oddDuct.allProducts[i].count} votes.`;
     ul.appendChild(li);
   }
 }
