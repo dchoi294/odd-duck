@@ -59,6 +59,33 @@ function renderImg() {
   oddDuct.allProducts[img3].votes++;
 }
 
+function storeResult() {
+  let stringifiedOddDuct = JSON.stringify(oddDuct);
+  localStorage.setItem('products', stringifiedOddDuct);
+}
+
+function getResult() {
+  let addingOddDuct = localStorage.getItem('products');
+  if(addingOddDuct) {
+    allProducts = [];
+    let parsedProducts = JSON.parsed(addingOddDuct);
+    for (let newDuck of parsedProducts) {
+      let name = newDuck.name;
+      let src = newDuck.src;
+      let votes = newDuck.votes;
+      let views = newDuck.views;
+      // addedDuct(name, src, votes, views);
+      let newOddDuct = new oddDuct(name, src, votes, views);
+      allProducts.push(newOddDuct);
+    }
+  }
+}
+
+// function addedDuct(name, src, votes, views) {
+//   let newOddDuct = new oddDuct(name, src, votes, views);
+//   allProducts.push(newOddDuct);
+// }
+
 function click(event) {
   if (event.target === imgContainer) {
     alert('Please click on an image');
@@ -68,7 +95,7 @@ function click(event) {
   for (let i = 0; i < oddDuct.allProducts.length; i++) {
     if (clickImg === oddDuct.allProducts[i].name) {
       oddDuct.allProducts[i].count++;
-      storeProducts();
+      storeResult();
       break;
     }
   }
@@ -78,6 +105,7 @@ function click(event) {
     // button.className = 'clicks-allowed';
     // imgContainer.className = 'no-voting';
     chart();
+    storeResult();
   } else {
     renderImg();
   }
@@ -159,19 +187,6 @@ let wineGlass = new oddDuct('wine-glass', 'img/wine-glass.jpg');
 let allProducts = [bag, banana, bathroom, boots, breakfast, bubblegum, chair, dogDuck, dragon, pen, petSweep, scissors, shark, sweep, tauntaun, unicorn, waterCan, wineGlass];
 
 
-
-function storeProducts(){
-  let stringifiedProducts = JSON.stringify(allProducts);
-  localStorage.setItem('products', stringifiedProducts);
-}
-
-function getProducts() {
-  let potentialProducts = localStorage.getItem('products');
-  if (potentialProducts) {
-    let parseProducts = JSON.parse(potentialProducts);
-    allProducts = parseProducts;
-  }
-}
-getProducts();
+getResult();
 imgContainer.addEventListener('click', click);
 renderImg();
