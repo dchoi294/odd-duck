@@ -6,9 +6,6 @@ let image1 = document.querySelector('section img:first-child');
 let image2 = document.querySelector('section img:nth-child(2)');
 let image3 = document.querySelector('section img:nth-child(3)');
 
-const ul = document.querySelector('ul');
-const form = document.querySelector('form');
-
 let count = 0;
 let maxCount = 25;
 
@@ -17,16 +14,10 @@ oddDuct.allProducts = [];
 function oddDuct(name, src) {
   this.name = name;
   this.src = src;
-  this.views = 0;
+  this.votes = 0;
   this.count = 0;
   oddDuct.allProducts.push(this);
 }
-
-oddDuct.prototype.renderResult = function() {
-  let li = document.createElement('li');
-  li.textContent = '';
-  ul.appendChild(li);
-};
 
 function getRandomImage() {
   return Math.floor(Math.random() * oddDuct.allProducts.length);
@@ -68,33 +59,34 @@ function renderImg() {
   oddDuct.allProducts[img3].votes++;
 }
 
-function newResult(imgName, imgCount, imgViews) {
-  let addToResult = new newResult(imgName, imgCount, imgViews);
-  oddDuct.allProducts.push(addToResult);
-  addToResult.renderResult();
-}
-
 function storeResult() {
-  let storeNewResult = JSON.stringify(oddDuct.allProducts);
-  localStorage.setItem('viewResult', storeNewResult);
+  let stringifiedOddDuct = JSON.stringify(oddDuct);
+  localStorage.setItem('products', stringifiedOddDuct);
 }
 
-function resultView() {
-  let previousResult = localStorage.getItem('viewResult');
-  if(previousResult) {
-    let parsedResult = JSON.parse(previousResult);
-    for(let previous of parsedResult) {
-      let imgName = previous.imgName;
-      let imgCount = previous.imgCount;
-      let imgViews = previous.imgViews;
-      newResult(imgName, imgCount, imgViews);
+function getResult() {
+  let addingOddDuct = localStorage.getItem('products');
+  if(addingOddDuct) {
+    allProducts = [];
+    let parsedProducts = JSON.parsed(addingOddDuct);
+    for (let newDuck of parsedProducts) {
+      let name = newDuck.name;
+      let src = newDuck.src;
+      let votes = newDuck.votes;
+      let views = newDuck.views;
+      // addedDuct(name, src, votes, views);
+      let newOddDuct = new oddDuct(name, src, votes, views);
+      allProducts.push(newOddDuct);
     }
   }
 }
 
-function click(event) {
-  event.preventDefault();
+// function addedDuct(name, src, votes, views) {
+//   let newOddDuct = new oddDuct(name, src, votes, views);
+//   allProducts.push(newOddDuct);
+// }
 
+function click(event) {
   if (event.target === imgContainer) {
     alert('Please click on an image');
   }
@@ -103,26 +95,20 @@ function click(event) {
   for (let i = 0; i < oddDuct.allProducts.length; i++) {
     if (clickImg === oddDuct.allProducts[i].name) {
       oddDuct.allProducts[i].count++;
+      storeResult();
       break;
     }
   }
-  chart();
-  button.addEventListener('click', result);
-
   if (count === maxCount) {
     imgContainer.removeEventListener('click', click);
+    button.addEventListener('click', renderResult);
     // button.className = 'clicks-allowed';
     // imgContainer.className = 'no-voting';
+    chart();
+    storeResult();
   } else {
     renderImg();
   }
-
-  let imgName = event.target.imgName.value;
-  let imgCount = event.target.imgCount.value;
-  let imgViews = event.target.imgVotes.value;
-  newResult(imgName, imgCount, imgViews);
-  storeResult();
-  resultView();
 }
 
 function chart() {
@@ -136,20 +122,20 @@ function chart() {
   }
 
   const data = {
-    labels: imgNames, imgViews, imgVotes,
+    labels: imgNames,
     datasets: [{
       label: 'Views',
       backgroundColor: 'lightblue',
       borderColor: 'blue',
       data: imgViews,
-      borderWidth: 1
+      borderWidth: 0.5
     },
     {
       label: 'Votes',
       backgroundColor: 'lightyellow',
       borderColor: 'yellow',
       data: imgVotes,
-      borderWidth: 1
+      borderWidth: 0.5
     }]
   };
 
@@ -167,12 +153,10 @@ function chart() {
   };
 
   const newChart = new Chart(document.getElementById('newChart'), config);
-  result();
+  renderResult();
 }
 
-
-
-function result() {
+function renderResult() {
   let ul = document.querySelector('ul');
   for (let i = 0; i < oddDuct.allProducts.length; i++) {
     let li = document.createElement('li');
@@ -202,6 +186,7 @@ let wineGlass = new oddDuct('wine-glass', 'img/wine-glass.jpg');
 
 let allProducts = [bag, banana, bathroom, boots, breakfast, bubblegum, chair, dogDuck, dragon, pen, petSweep, scissors, shark, sweep, tauntaun, unicorn, waterCan, wineGlass];
 
-renderImg();
 
+getResult();
 imgContainer.addEventListener('click', click);
+renderImg();
