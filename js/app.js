@@ -19,6 +19,27 @@ function oddDuct(name, src) {
   oddDuct.allProducts.push(this);
 }
 
+let bag = new oddDuct('bag', 'img/bag.jpg');
+let banana =new oddDuct('banana', 'img/banana.jpg');
+let bathroom = new oddDuct('bathroom', 'img/bathroom.jpg');
+let boots = new oddDuct('boots', 'img/boots.jpg');
+let breakfast = new oddDuct('breakfast', 'img/breakfast.jpg');
+let bubblegum = new oddDuct('bubblegum', 'img/bubblegum.jpg');
+let chair = new oddDuct('chair', 'img/chair.jpg');
+let dogDuck = new oddDuct('dog-duck', 'img/dog-duck.jpg');
+let dragon = new oddDuct('dragon', 'img/dragon.jpg');
+let pen = new oddDuct('pen', 'img/pen.jpg');
+let petSweep = new oddDuct('pet-sweep', 'img/pet-sweep.jpg');
+let scissors = new oddDuct('scissors', 'img/scissors.jpg');
+let shark = new oddDuct('shark', 'img/shark.jpg');
+let sweep = new oddDuct('sweep', 'img/sweep.png');
+let tauntaun = new oddDuct('tauntaun', 'img/tauntaun.jpg');
+let unicorn = new oddDuct('unicorn', 'img/unicorn.jpg');
+let waterCan = new oddDuct('water-can', 'img/water-can.jpg');
+let wineGlass = new oddDuct('wine-glass', 'img/wine-glass.jpg');
+
+let allProducts = [bag, banana, bathroom, boots, breakfast, bubblegum, chair, dogDuck, dragon, pen, petSweep, scissors, shark, sweep, tauntaun, unicorn, waterCan, wineGlass];
+
 function getRandomImage() {
   return Math.floor(Math.random() * oddDuct.allProducts.length);
 }
@@ -59,6 +80,8 @@ function renderImg() {
   oddDuct.allProducts[img3].votes++;
 }
 
+
+
 function click(event) {
   if (event.target === imgContainer) {
     alert('Please click on an image');
@@ -68,16 +91,15 @@ function click(event) {
   for (let i = 0; i < oddDuct.allProducts.length; i++) {
     if (clickImg === oddDuct.allProducts[i].name) {
       oddDuct.allProducts[i].count++;
-      storeProducts();
+      // storeResult();
       break;
     }
   }
   if (count === maxCount) {
     imgContainer.removeEventListener('click', click);
     button.addEventListener('click', renderResult);
-    // button.className = 'clicks-allowed';
+    button.className = 'clicks-allowed';
     // imgContainer.className = 'no-voting';
-    chart();
   } else {
     renderImg();
   }
@@ -100,14 +122,14 @@ function chart() {
       backgroundColor: 'lightblue',
       borderColor: 'blue',
       data: imgViews,
-      borderWidth: 0.5
+      borderWidth: 1
     },
     {
       label: 'Votes',
       backgroundColor: 'lightyellow',
       borderColor: 'yellow',
       data: imgVotes,
-      borderWidth: 0.5
+      borderWidth: 1
     }]
   };
 
@@ -128,6 +150,33 @@ function chart() {
   renderResult();
 }
 
+function storeResult() {
+  let stringifiedOddDuct = JSON.stringify(allProducts);
+  localStorage.setItem('products', stringifiedOddDuct);
+}
+
+function getResult() {
+  let addingOddDuct = localStorage.getItem('products');
+  if(addingOddDuct) {
+    allProducts = [];
+    let parsedProducts = JSON.parse(addingOddDuct);
+    for (let newDuck of parsedProducts) {
+      let name = newDuck.name;
+      let src = newDuck.src;
+      let votes = newDuck.votes;
+      let views = newDuck.views;
+      // addedDuct(name, src, votes, views);
+      let newOddDuct = new oddDuct(name, src, votes, views);
+      allProducts.push(newOddDuct);
+    }
+  }
+}
+
+// function addedDuct(name, src, votes, views) {
+//   let newOddDuct = new oddDuct(name, src, votes, views);
+//   allProducts.push(newOddDuct);
+// }
+
 function renderResult() {
   let ul = document.querySelector('ul');
   for (let i = 0; i < oddDuct.allProducts.length; i++) {
@@ -135,43 +184,13 @@ function renderResult() {
     li.textContent = `${oddDuct.allProducts[i].name}: ${oddDuct.allProducts[i].votes} views and ${oddDuct.allProducts[i].count} votes.`;
     ul.appendChild(li);
   }
+  chart();
+  storeResult();
 }
 
-let bag = new oddDuct('bag', 'img/bag.jpg');
-let banana =new oddDuct('banana', 'img/banana.jpg');
-let bathroom = new oddDuct('bathroom', 'img/bathroom.jpg');
-let boots = new oddDuct('boots', 'img/boots.jpg');
-let breakfast = new oddDuct('breakfast', 'img/breakfast.jpg');
-let bubblegum = new oddDuct('bubblegum', 'img/bubblegum.jpg');
-let chair = new oddDuct('chair', 'img/chair.jpg');
-let dogDuck = new oddDuct('dog-duck', 'img/dog-duck.jpg');
-let dragon = new oddDuct('dragon', 'img/dragon.jpg');
-let pen = new oddDuct('pen', 'img/pen.jpg');
-let petSweep = new oddDuct('pet-sweep', 'img/pet-sweep.jpg');
-let scissors = new oddDuct('scissors', 'img/scissors.jpg');
-let shark = new oddDuct('shark', 'img/shark.jpg');
-let sweep = new oddDuct('sweep', 'img/sweep.png');
-let tauntaun = new oddDuct('tauntaun', 'img/tauntaun.jpg');
-let unicorn = new oddDuct('unicorn', 'img/unicorn.jpg');
-let waterCan = new oddDuct('water-can', 'img/water-can.jpg');
-let wineGlass = new oddDuct('wine-glass', 'img/wine-glass.jpg');
-
-let allProducts = [bag, banana, bathroom, boots, breakfast, bubblegum, chair, dogDuck, dragon, pen, petSweep, scissors, shark, sweep, tauntaun, unicorn, waterCan, wineGlass];
 
 
 
-function storeProducts(){
-  let stringifiedProducts = JSON.stringify(allProducts);
-  localStorage.setItem('products', stringifiedProducts);
-}
-
-function getProducts() {
-  let potentialProducts = localStorage.getItem('products');
-  if (potentialProducts) {
-    let parseProducts = JSON.parse(potentialProducts);
-    allProducts = parseProducts;
-  }
-}
-getProducts();
+// getResult();
 imgContainer.addEventListener('click', click);
 renderImg();
